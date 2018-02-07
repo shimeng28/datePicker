@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>Date Picker</title>
+<meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no'/>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<style>
+	#date-picker {
+		font-size: 0.4rem;
+		width: 120px;
+		height: 27px;
+		padding: 10px;
+		margin: 10px 20px;
+		background: #ccc;
+	}
+</style>
+<link rel="stylesheet" type="text/css" href="./index.css" />
+<script type="text/javascript" src="./dataPicker.js"></script>
+</head>
+<body>
+<div id="date-picker"></div>
+<script>
+const datePicker = new DatePicker({
+	title: '选择开始时间',
+	show: true,
+	minDate: new Date('2001-12-28'),
+	maxDate: new Date('2050-12-28'),
+	onConfim: (currDateStr) => {
+		document.querySelector('#date-picker').innerHTML = currDateStr;
+	},
+});
+document.querySelector('#date-picker').addEventListener('click', function(e) {
+	e.stopPropagation();
+	datePicker.show();
+}, false);
+</script>
+</body>
+</html>
