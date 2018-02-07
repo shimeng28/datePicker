@@ -42,11 +42,15 @@ html {
 	height: 3.6rem;
 	background: #fff;
 	overflow: hidden;
-	display: flex;
-	flex-flow: nowrap row;
-	justify-content: space-between;
-	padding: 0 1.68rem 0 1.26rem;
 	position: relative;
+}
+#date-content .year, #date-content .month, #date-content .day {
+	vertical-align: top;
+	display: inline-block;
+	width: 33%;
+	height: 3.6rem;
+	min-width: 1.5rem;
+	padding: 0 0.5rem;
 }
 #date-content .year > div > div, #date-content .month > div > div, #date-content .day > div > div {
 	color: #ccc;

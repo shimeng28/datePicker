@@ -26,8 +26,6 @@
 const datePicker = new DatePicker({
 	title: '选择开始时间',
 	show: true,
-	minDate: new Date('2001-12-28'),
-	maxDate: new Date('2050-12-28'),
 	onConfim: (currDateStr) => {
 		document.querySelector('#date-picker').innerHTML = currDateStr;
 	},

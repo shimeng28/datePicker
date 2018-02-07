@@ -13,25 +13,29 @@
     getTopPos: function(ele) {
       return ele.getBoundingClientRect().top;
     },
+    getCell: function(index) {
+      const cells = ['年', '月', '日'];
+      return cells[index];
+    },
     renderYearList: function(begin, end) {
       end = end || begin + 100;
       let result = '';
       for (let i = begin; i < end + 1; i++) {
-        result += '<div>'+ i + '年</div>'
+        result += '<div>'+ i + '</div>'
       }
       return result;
     },
     renderMonthList: function() {
       let result = '';
       for (let i = 1; i < 13; i++){
-        result +='<div>' + i + '月</div>'
+        result +='<div>' + i + '</div>'
       }
       return result;
     },
     renderDayList: function() {
       let result = '';
       for (let i = 1; i < 32; i++) {
-        result += '<div>' + i + '日</div>'
+        result += '<div>' + i + '</div>'
       }
       return result;
     },
@@ -57,6 +61,12 @@
       });
     },
   }
+
+  /**
+   * scroller构造函数
+   * @param {string} id
+   * @param {Object} params
+   */
   function Scroller(id, params) {
     this.scroller = document.querySelector(id);
     this.childNode = this.scroller.childNodes[0];
@@ -89,7 +99,8 @@
       const index = Math.floor(defaultPlace / this.stepLen);
       // 重新计算默认滚动位置
       defaultPlace = index * this.stepLen;
-      const defaultEle = this.childNode.childNodes[index + 3]
+      const defaultEle = this.childNode.childNodes[index + 3];
+      defaultEle.textContent = defaultEle.textContent + util.getCell(this.options.i);
       defaultEle.classList.add('choseEle');
       this.lastChoseEle = defaultEle;
     }
@@ -139,6 +150,7 @@
           movePageY = Math.abs(self.scrollHegiht) - Math.abs(movePageY);
           movePageY = movePageY / 3 - self.scrollHeight;
         }
+        console.log('_move movePageY', movePageY);
         util.browserVendor(self.childNode, 'transform', 'translate(0, ' + movePageY + 'px)');
 
       }, false);
@@ -156,6 +168,7 @@
         const offsetHeight = touches.pageY - self.startPageY;
         // 总偏移位置
         self.offsetTop += offsetHeight;
+        console.log('_end offsetTop', self.offsetTop);
         if ((self.offsetTop > 0) || Math.abs(self.offsetTop) > Math.abs(self.scrollHeight)) {
           util.browserVendor(self.childNode, 'transition', 'all 500ms');
         } else if (duration < 300) {
@@ -188,6 +201,7 @@
 
           const index = parseInt(Math.abs(moveY) / self.stepLen);
           self.offsetTop = moveY;
+          console.log('moveY', self.offsetTop);
           util.browserVendor(self.childNode, 'transform', 'translate(0, ' + self.offsetTop + 'px)');
           self.options.onConfim({
             stepLen: self.stepLen,
@@ -362,6 +376,7 @@
     const self = this;
     for (let i = 0; i < 3; i++) {
       scrollerList.push(new Scroller('#date-scroll' + (i + 1), {
+        i: i,
         step: itemHeight,
         onConfim: self.scrollEnd(i),
         defaultPlace: (currDateList[i] - dateOffsetTopBase[i]) * itemHeight,
@@ -382,11 +397,6 @@
       let {minDateList, currDateList, maxDateList, scrollerList, dateOffsetTopBase} = self;
       let {minDate, currDate, maxDate} = self.opt;
 
-
-      if (scroller.lastChoseEle) {
-        scroller.lastChoseEle.classList.remove('choseEle')
-      }
-
       let choseScroller = scroller, type = index;
       let data;
       // 年份
@@ -400,8 +410,8 @@
       currDate = new Date(currDateList);
 
       // 30天的月份
-      let maxThirtyDays;
-      if (String(currDateList[1]).indexOf([1,3,5,7,8,10,12]) === -1) {
+      let maxThirtyDays = currDateList;
+      if (([1,3,5,7,8,10,12]).indexOf(currDateList[1]) === -1) {
         maxThirtyDays = [currDateList[0], currDateList[1], 30];
       }
       if (currDate.getTime() > new Date(maxThirtyDays)) {
@@ -415,7 +425,7 @@
 
 
       // 闰年
-      let maxLeaf;
+      let maxLeaf = currDateList;
       if (util.isLeapYear(currDateList[0]) && currDateList[1] === 2) {
         maxLeaf = [currDateList[0], 2, 29];
       } else if (currDateList[1] === 2) {
@@ -447,12 +457,16 @@
 
       // 要多调整一次
       if (choseScroller !== scroller) {
+        if (choseScroller.lastChoseEle) {
+          scroller.lastChoseEle.textContent = currDateList[index];
+          scroller.lastChoseEle.classList.remove('choseEle')
+        }
         const curr = currDateList[index] - dateOffsetTopBase[index];
          // 元素list最上面有三个占位置的元素
         const choseElePos = curr + 3;
         const node = nodes[choseElePos];
         scroller.lastChoseEle = node;
-        setTimeout(self.chooseDateEle(node), 100);
+        setTimeout(self.chooseDateEle(node, type), 100);
       }
     }
   };
@@ -463,18 +477,20 @@
    * @param {number} stepLen
    */
   fn.adjustDate = function(type, scroller, stepLen) {
+    const {currDateList, dateOffsetTopBase} = this;
+
     if (scroller.lastChoseEle) {
+      scroller.lastChoseEle.textContent = scroller.lastChoseEle.textContent.slice(0, -1);
       scroller.lastChoseEle.classList.remove('choseEle')
     }
 
-    const {currDateList, dateOffsetTopBase} = this;
     const curr = currDateList[type] - dateOffsetTopBase[type];
     scroller.scrollTo(0, curr * stepLen);
      // 元素list最上面有三个占位置的元素
     const choseElePos = curr + 3;
     const node = scroller.childNode.childNodes[choseElePos];
     scroller.lastChoseEle = node;
-    setTimeout(this.chooseDateEle(node), 100);
+    setTimeout(this.chooseDateEle(node, type), 100);
   };
   fn.checkInThityDays = function() {
     let maxThirtyDays;
@@ -485,13 +501,14 @@
       currDateList[2] = maxThirtyDays[2];
     }
   };
-  fn.chooseDateEle = function(node) {
+  fn.chooseDateEle = function(node, index) {
     const self = this;
     return function() {
       const nodeTop = util.getTopPos(node);
       const topBorder = util.getTopPos(document.querySelector('#data-chose-top-border'));
       const bottomBorder = util.getTopPos(document.querySelector('#data-chose-bottom-border'));
       if (topBorder <= nodeTop && nodeTop <= bottomBorder) {
+        node.textContent = node.textContent + util.getCell(index);
         node.classList.add('choseEle');
       } else {
         setTimeout(self.chooseDateEle(node), 10);
