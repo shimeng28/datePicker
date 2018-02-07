@@ -44,7 +44,7 @@ html {
 	overflow: hidden;
 	position: relative;
 }
-#date-content .year, #date-content .month, #date-content .day {
+#date-content .date-year, #date-content .date-month, #date-content .date-day {
 	vertical-align: top;
 	display: inline-block;
 	width: 33%;
@@ -52,7 +52,20 @@ html {
 	min-width: 1.5rem;
 	padding: 0 0.5rem;
 }
-#date-content .year > div > div, #date-content .month > div > div, #date-content .day > div > div {
+#date-content .date-cell, #date-content .date-cell, #date-content  .date-cell {
+	position: absolute;
+	top: 1.68rem;
+}
+#date-content .date-cell.date-year-cell{
+	left: 2.2rem;
+}
+#date-content .date-cell.date-month-cell {
+  left: 4.4rem;
+}
+#date-content  .date-cell.date-day-cell {
+	right: 0.7rem;
+}
+#date-content .date-year > div > div, #date-content .date-month > div > div, #date-content .date-day > div > div {
 	color: #ccc;
 	width: 1rem;
 	text-align: right;
@@ -60,10 +73,10 @@ html {
 	line-height: 0.56rem;
 	letter-spacing: 1px;
 }
-#date-content .year > div > div {
+#date-content .date-year > div > div {
   width: 1.5rem;
 }
-#date-content .year > div > div.choseEle, #date-content .month > div > div.choseEle, #date-content .day > div > div.choseEle {
+#date-content .date-year > div > div.choseEle, #date-content .date-month > div > div.choseEle, #date-content .date-day > div > div.choseEle {
 	color: #000;
 	opacity: 1;
 }

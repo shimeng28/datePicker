@@ -100,7 +100,6 @@
       // 重新计算默认滚动位置
       defaultPlace = index * this.stepLen;
       const defaultEle = this.childNode.childNodes[index + 3];
-      defaultEle.textContent = defaultEle.textContent + util.getCell(this.options.i);
       defaultEle.classList.add('choseEle');
       this.lastChoseEle = defaultEle;
     }
@@ -284,8 +283,10 @@
                  + '</div>';
 
     let content = '<div id="date-content">';
-    let year = '<div class="year" id="date-scroll1"></div>';
-    let month = '<div class="month" id="date-scroll2">'
+
+    let year = '<div class="date-year" id="date-scroll1"></div>';
+
+    let month = '<div class="date-month" id="date-scroll2">'
       +  '<div>'
         + '<div></div>'
         + '<div></div>'
@@ -295,7 +296,7 @@
         + '<div></div>'
       + '</div>'
       + '</div>';
-    let day = '<div class="day" id="date-scroll3">'
+    let day = '<div class="date-day" id="date-scroll3">'
       +  '<div>'
         + '<div></div>'
         + '<div></div>'
@@ -306,7 +307,7 @@
       + '</div>'
       + '</div>';
 
-    content += ('<div id="data-chose-top-border"></div><div id="data-chose-bottom-border"></div>' +year + month + day + '</div>');
+    content += ('<div id="data-chose-top-border"></div><div id="data-chose-bottom-border"></div><div class="date-cell date-year-cell">年</div><div class="date-cell date-month-cell">月</div><div class="date-cell date-day-cell">日</div>' +year + month + day + '</div>');
 
     datePicker += (titleBar + content + '</div>');
     const domFragment = document.createElement('div');
@@ -458,7 +459,6 @@
       // 要多调整一次
       if (choseScroller !== scroller) {
         if (choseScroller.lastChoseEle) {
-          scroller.lastChoseEle.textContent = currDateList[index];
           scroller.lastChoseEle.classList.remove('choseEle')
         }
         const curr = currDateList[index] - dateOffsetTopBase[index];
@@ -480,7 +480,6 @@
     const {currDateList, dateOffsetTopBase} = this;
 
     if (scroller.lastChoseEle) {
-      scroller.lastChoseEle.textContent = scroller.lastChoseEle.textContent.slice(0, -1);
       scroller.lastChoseEle.classList.remove('choseEle')
     }
 
@@ -508,7 +507,6 @@
       const topBorder = util.getTopPos(document.querySelector('#data-chose-top-border'));
       const bottomBorder = util.getTopPos(document.querySelector('#data-chose-bottom-border'));
       if (topBorder <= nodeTop && nodeTop <= bottomBorder) {
-        node.textContent = node.textContent + util.getCell(index);
         node.classList.add('choseEle');
       } else {
         setTimeout(self.chooseDateEle(node), 10);
