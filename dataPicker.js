@@ -1,6 +1,6 @@
 (function(global, factory){
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && typeof define.amd ? define(factory) :
+  typeof define === 'function' && define.amd ? define(factory) :
   (global.DatePicker = factory())
 }(this, function() {
   const util = {
@@ -60,6 +60,7 @@
         title: '选择时间',
         container: 'body',
         onConfirm: () => {},
+        onCancel: () => {},
       };
     },
     browserVendor: function(ele, styleStr, value) {
@@ -85,7 +86,7 @@
     this.options = {
       step: true,
       defaultPlace: 0,
-      onConfim: () => {},
+      callback: () => {},
     };
     this.options = Object.assign(this.options, params);
 
@@ -211,7 +212,7 @@
           const index = parseInt(Math.abs(moveY) / self.stepLen);
           self.offsetTop = moveY;
           util.browserVendor(self.childNode, 'transform', 'translate(0, ' + self.offsetTop + 'px)');
-          self.options.onConfirm({
+          self.options.callback({
             stepLen: self.stepLen,
             num: index,
             nodes: self.childNode.childNodes,
@@ -247,6 +248,11 @@
 
     const currDate = this.opt.currDate;
     const minDate = this.opt.minDate;
+    // 如果当前的日期小于最小的日期
+    if (currDate.getTime() < minDate.getTime()) {
+      currDate = minDate;
+    }
+
     // 如果没有自定义最大日期
     if (!this.opt.maxDate) {
       this.opt.maxDate = new Date([currDate.getFullYear() + 100, 12, 31]);
@@ -282,7 +288,7 @@
     return this;
   };
   fn.renderDateWrap = function() {
-    let datePicker = '<div id="date-container'+ this.classSuffix +'" class="date-container-wrap">';
+    let datePicker = '<div class="date-mask-wrap" id="date-mask' + this.classSuffix + '"></div><div id="date-container'+ this.classSuffix +'" class="date-container-wrap">';
 
     let titleBar = '<div id="date-title-bar' + this.classSuffix + '" class="date-title-bar-wrap">'
                    + '<div class="data-cancel">取消</div>'
@@ -322,7 +328,8 @@
     datePicker += (titleBar + content + '</div>');
     const domFragment = document.createElement('div');
     domFragment.innerHTML = datePicker;
-    document.querySelector(this.opt.container).appendChild(domFragment);
+    const container = document.querySelector(this.opt.container)
+    container.insertBefore(domFragment, container.childNodes[0]);
   };
   /**
    * 年份需要限制显示，月份和日期不用
@@ -357,9 +364,12 @@
         switch(target) {
           case okBtn:
             self.opt.onConfirm(self.currDateList.join('-'));
-          case cancelBtn:
             self.hide();
-            break;
+          break;
+          case cancelBtn:
+            self.opt.onCancel();
+            self.hide();
+          break;
           default:
           break;
         }
@@ -368,17 +378,21 @@
 
     document.addEventListener('click', function(e) {
       e.stopPropagation();
-
+      self.opt.onCancel();
       self.hide();
     }, false);
   };
   fn.show = function(e) {
     const ele = document.querySelector('#date-container' + this.classSuffix);
-    ele.style.display = 'block';
+    const mask = document.querySelector('#date-mask' + this.classSuffix);
+    ele.style.zIndex = 9999;
+    mask.style.zIndex = 9998;
   };
   fn.hide = function(e) {
     const ele = document.querySelector('#date-container' + this.classSuffix);
-    ele.style.display = 'none';
+    const mask = document.querySelector('#date-mask' + this.classSuffix);
+    mask.style.zIndex = 1;
+    ele.style.zIndex = -1;
   };
   fn.initScroll = function() {
     const {currDateList, dateOffsetTopBase, scrollerList} = this;
@@ -388,10 +402,46 @@
     for (let i = 0; i < 3; i++) {
       scrollerList.push(new Scroller('#date-scroll' + (i + 1) + this.classSuffix, {
         step: itemHeight,
-        onConfirm: self.scrollEnd(i),
+        callback: self.scrollEnd(i),
         defaultPlace: (currDateList[i] - dateOffsetTopBase[i]) * itemHeight,
       }));
     }
+  };
+  /**
+   *
+   * @param {object} params 可以包括minDate, maxDate, currDate
+   */
+  fn.setDateLimit = function(params) {
+    this.opt = Object.assign({
+      ...this.opt,
+      ...params,
+    });
+
+    let {minDate, currDate, maxDate} = this.opt;
+    // 如果当前的日期小于最小的日期
+    if (currDate.getTime() < minDate.getTime()) {
+      currDate = minDate;
+    }
+    this.scrollerList.forEach((scroller) => {
+      if (scroller.lastChoseEle) {
+        scroller.lastChoseEle.classList.remove('choseEle')
+      }
+    });
+    // 重新计算日期
+    this.minDateList = [minDate.getFullYear(), minDate.getMonth() + 1, minDate.getDate()];
+    this.currDateList = [currDate.getFullYear(), currDate.getMonth() + 1, currDate.getDate()];
+    this.maxDateList = [maxDate.getFullYear(), maxDate.getMonth() + 1, maxDate.getDate()];
+    this.opt.minDate = new Date(this.minDateList);
+    this.opt.currDate = new Date(this.currDateList);
+    this.opt.maxDate = new Date(this.maxDateList);
+
+    this.dateOffsetTopBase = [minDate.getFullYear(), 1, 1];
+
+    this.scrollerList = [];
+
+    this.renderYear();
+
+    this.initScroll();
   };
   /**
    * 滚动结束的回调
@@ -448,6 +498,7 @@
         type = 2;
       }
 
+      // 日期超过限制
       for (let i = 0; i < 3; i++) {
         currDate = new Date(currDateList);
         if (currDate.getTime() < minDate.getTime()) {
@@ -462,6 +513,7 @@
       }
 
       self.currDateList = currDateList;
+      // 如果日期超过限制 调整
       self.adjustDate(type, choseScroller, stepLen);
 
 
@@ -509,6 +561,11 @@
       currDateList[2] = maxThirtyDays[2];
     }
   };
+  /**
+   *  标记被选择的元素
+   * @param {htmlElement} node
+   * @param {number} index
+   */
   fn.chooseDateEle = function(node, index) {
     const self = this;
     return function() {

@@ -39,29 +39,57 @@
 		<div id="date-picker-end"></div>
 	</div>
 </div>
+
 <script>
+let pickerOpen = false;
 const datePickerStart = new DatePicker({
 	title: '选择开始时间',
 	show: false,
 	onConfirm: (currDateStr) => {
+		pickerOpen = false;
 		document.querySelector('#date-picker-start').innerHTML = currDateStr;
+		datePickerEnd.setDateLimit({
+			minDate: new Date(currDateStr),
+		});
+	},
+	onCancel: () => {
+		pickerOpen = false;
 	},
 });
 const datePickerEnd = new DatePicker({
 	title: '选择结束时间',
 	show: false,
 	onConfirm: (currDateStr) => {
+		pickerOpen = false;
 		document.querySelector('#date-picker-end').innerHTML = currDateStr;
+		datePickerStart.setDateLimit({
+			maxDate: new Date(currDateStr),
+		});
+	},
+	onCancel: () => {
+		pickerOpen = false;
 	},
 });
-document.querySelector('#date-picker-start').addEventListener('click', function(e) {
+
+let startListener = function(e) {
 	e.stopPropagation();
+	if (pickerOpen) {
+		return false;
+	}
 	datePickerStart.show();
-}, false);
-document.querySelector('#date-picker-end').addEventListener('click', function(e) {
+	pickerOpen = true;
+};
+let endListener = function(e) {
 	e.stopPropagation();
+	if (pickerOpen) {
+		return false;
+	}
 	datePickerEnd.show();
-}, false);
+	pickerOpen = true;
+};
+document.querySelector('#date-picker-start').addEventListener('click', startListener, false);
+document.querySelector('#date-picker-end').addEventListener('click', endListener, false);
+
 </script>
 </body>
 </html>

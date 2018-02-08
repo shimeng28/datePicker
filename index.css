@@ -5,7 +5,7 @@ html {
 	box-sizing: border-box;
 	font-family: PingFangSC-Regular;
 }
-.date-container-wrap {
+.date-container-wrap, .date-mask-wrap {
 	font-size: 0.35rem;
 	background: rgba(255, 255, 255, 0.8);
 	position: fixed;
@@ -13,7 +13,12 @@ html {
 	bottom: 0;
 	width: 100%;
 	color: #26282E;
-	z-index: 9999999;
+	z-index: 9999;
+}
+.date-mask-wrap {
+	background: rgba(255, 255, 255, 1);
+	height: 4.4rem;
+	z-index: 9998;
 }
 .date-container-wrap .date-title-bar-wrap {
 	width: 100%;
@@ -50,7 +55,7 @@ html {
 	width: 33%;
 	height: 3.6rem;
 	min-width: 1.5rem;
-	padding: 0 1rem;
+	padding: 0 0 0 1rem;
 }
 .date-content-wrap .date-cell, .date-content-wrap .date-cell, .date-content-wrap  .date-cell {
 	font-size: 0.32rem;
