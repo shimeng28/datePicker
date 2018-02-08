@@ -8,12 +8,19 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <style>
-	#date-picker {
-		font-size: 0.4rem;
-		width: 120px;
-		height: 27px;
-		padding: 10px;
-		margin: 10px 20px;
+  #test1 {
+		width: 100%;
+	}
+	#test1 .start, #test1 .end {
+		font-size: 0.3rem;
+		display: inline-block;
+		vertical-align: top;
+	}
+	#date-picker-start, #date-picker-end {
+		width: 1.8rem;
+		text-align: center;
+		height: 0.54rem;
+		line-height: 0.54rem;
 		background: #ccc;
 	}
 </style>
@@ -21,18 +28,39 @@
 <script type="text/javascript" src="./dataPicker.js"></script>
 </head>
 <body>
-<div id="date-picker"></div>
+<div id="test1">
+	<div class="start">
+		<div>开始时间</div>
+		<div id="date-picker-start"></div>
+	</div>
+	-
+	<div class="end">
+		<div>结束时间</div>
+		<div id="date-picker-end"></div>
+	</div>
+</div>
 <script>
-const datePicker = new DatePicker({
+const datePickerStart = new DatePicker({
 	title: '选择开始时间',
-	show: true,
-	onConfim: (currDateStr) => {
-		document.querySelector('#date-picker').innerHTML = currDateStr;
+	show: false,
+	onConfirm: (currDateStr) => {
+		document.querySelector('#date-picker-start').innerHTML = currDateStr;
 	},
 });
-document.querySelector('#date-picker').addEventListener('click', function(e) {
+const datePickerEnd = new DatePicker({
+	title: '选择结束时间',
+	show: false,
+	onConfirm: (currDateStr) => {
+		document.querySelector('#date-picker-end').innerHTML = currDateStr;
+	},
+});
+document.querySelector('#date-picker-start').addEventListener('click', function(e) {
 	e.stopPropagation();
-	datePicker.show();
+	datePickerStart.show();
+}, false);
+document.querySelector('#date-picker-end').addEventListener('click', function(e) {
+	e.stopPropagation();
+	datePickerEnd.show();
 }, false);
 </script>
 </body>

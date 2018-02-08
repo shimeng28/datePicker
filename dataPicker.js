@@ -4,6 +4,18 @@
   (global.DatePicker = factory())
 }(this, function() {
   const util = {
+    classSuffix: (function() {
+      let seq = 1001010100;
+
+      return {
+        get: function() {
+          return seq++;
+        },
+        set: function(newSeq) {
+          seq = newSeq;
+        },
+      };
+    })(),
     getTime: function() {
       return parseInt(new Date().getTime(), 10);
     },
@@ -47,7 +59,7 @@
         minDate: date,
         title: '选择时间',
         container: 'body',
-        onConfim: () => {},
+        onConfirm: () => {},
       };
     },
     browserVendor: function(ele, styleStr, value) {
@@ -149,7 +161,6 @@
           movePageY = Math.abs(self.scrollHegiht) - Math.abs(movePageY);
           movePageY = movePageY / 3 - self.scrollHeight;
         }
-        console.log('_move movePageY', movePageY);
         util.browserVendor(self.childNode, 'transform', 'translate(0, ' + movePageY + 'px)');
 
       }, false);
@@ -167,7 +178,6 @@
         const offsetHeight = touches.pageY - self.startPageY;
         // 总偏移位置
         self.offsetTop += offsetHeight;
-        console.log('_end offsetTop', self.offsetTop);
         if ((self.offsetTop > 0) || Math.abs(self.offsetTop) > Math.abs(self.scrollHeight)) {
           util.browserVendor(self.childNode, 'transition', 'all 500ms');
         } else if (duration < 300) {
@@ -200,9 +210,8 @@
 
           const index = parseInt(Math.abs(moveY) / self.stepLen);
           self.offsetTop = moveY;
-          console.log('moveY', self.offsetTop);
           util.browserVendor(self.childNode, 'transform', 'translate(0, ' + self.offsetTop + 'px)');
-          self.options.onConfim({
+          self.options.onConfirm({
             stepLen: self.stepLen,
             num: index,
             nodes: self.childNode.childNodes,
@@ -252,6 +261,7 @@
 
     this.dateOffsetTopBase = [minDate.getFullYear(), 1, 1];
 
+    this.classSuffix = util.classSuffix.get();
     this.scrollerList = [];
     this.init();
   }
@@ -272,9 +282,9 @@
     return this;
   };
   fn.renderDateWrap = function() {
-    let datePicker = '<div id="date-container">';
+    let datePicker = '<div id="date-container'+ this.classSuffix +'" class="date-container-wrap">';
 
-    let titleBar = '<div id="date-title-bar">'
+    let titleBar = '<div id="date-title-bar' + this.classSuffix + '" class="date-title-bar-wrap">'
                    + '<div class="data-cancel">取消</div>'
                    + '<div>'
                      + this.opt.title
@@ -282,11 +292,11 @@
                    + '<div class="data-ok">确定</div>'
                  + '</div>';
 
-    let content = '<div id="date-content">';
+    let content = '<div class="date-content-wrap">';
 
-    let year = '<div class="date-year" id="date-scroll1"></div>';
+    let year = '<div class="date-year" id="date-scroll1' + this.classSuffix + '"></div>';
 
-    let month = '<div class="date-month" id="date-scroll2">'
+    let month = '<div class="date-month" id="date-scroll2' + this.classSuffix + '">'
       +  '<div>'
         + '<div></div>'
         + '<div></div>'
@@ -296,7 +306,7 @@
         + '<div></div>'
       + '</div>'
       + '</div>';
-    let day = '<div class="date-day" id="date-scroll3">'
+    let day = '<div class="date-day" id="date-scroll3' + this.classSuffix + '">'
       +  '<div>'
         + '<div></div>'
         + '<div></div>'
@@ -307,7 +317,7 @@
       + '</div>'
       + '</div>';
 
-    content += ('<div id="data-chose-top-border"></div><div id="data-chose-bottom-border"></div><div class="date-cell date-year-cell">年</div><div class="date-cell date-month-cell">月</div><div class="date-cell date-day-cell">日</div>' +year + month + day + '</div>');
+    content += ('<div class="data-chose-top-border"></div><div class="data-chose-bottom-border"></div><div class="date-cell date-year-cell">年</div><div class="date-cell date-month-cell">月</div><div class="date-cell date-day-cell">日</div>' +year + month + day + '</div>');
 
     datePicker += (titleBar + content + '</div>');
     const domFragment = document.createElement('div');
@@ -327,17 +337,17 @@
       + '<div></div>'
       + '<div></div>'
     + '</div>';
-    document.querySelector('#date-scroll1').innerHTML = result;
+    document.querySelector('#date-scroll1' + this.classSuffix).innerHTML = result;
   };
   fn.addEvent = function() {
     const self = this;
     /**
      * 日期选择器 打开关闭事件
      */
-    document.getElementById('date-container').addEventListener('click', (function() {
-      const dateTitleBar = document.getElementById('date-title-bar');
-      const okBtn = dateTitleBar.getElementsByClassName('data-ok')[0];
-      const cancelBtn = dateTitleBar.getElementsByClassName('data-cancel')[0];
+    document.getElementById('date-container' + this.classSuffix).addEventListener('click', (function() {
+      const dateTitleBar = document.querySelector('#date-title-bar' + self.classSuffix);
+      const okBtn = dateTitleBar.querySelector('.data-ok');
+      const cancelBtn = dateTitleBar.querySelector('.data-cancel');
 
       return function(ev) {
         ev.stopPropagation();
@@ -346,7 +356,7 @@
         let target = ev.target || ev.srcElement;
         switch(target) {
           case okBtn:
-            self.opt.onConfim(self.currDateList.join('-'));
+            self.opt.onConfirm(self.currDateList.join('-'));
           case cancelBtn:
             self.hide();
             break;
@@ -363,23 +373,22 @@
     }, false);
   };
   fn.show = function(e) {
-    const ele = document.getElementById('date-container');
+    const ele = document.querySelector('#date-container' + this.classSuffix);
     ele.style.display = 'block';
   };
   fn.hide = function(e) {
-    const ele = document.getElementById('date-container');
+    const ele = document.querySelector('#date-container' + this.classSuffix);
     ele.style.display = 'none';
   };
   fn.initScroll = function() {
     const {currDateList, dateOffsetTopBase, scrollerList} = this;
-    const wrapper = document.querySelector('#date-scroll1').childNodes[0];
+    const wrapper = document.querySelector('#date-scroll1' + this.classSuffix).childNodes[0];
     const itemHeight = wrapper.childNodes[0].clientHeight;
     const self = this;
     for (let i = 0; i < 3; i++) {
-      scrollerList.push(new Scroller('#date-scroll' + (i + 1), {
-        i: i,
+      scrollerList.push(new Scroller('#date-scroll' + (i + 1) + this.classSuffix, {
         step: itemHeight,
-        onConfim: self.scrollEnd(i),
+        onConfirm: self.scrollEnd(i),
         defaultPlace: (currDateList[i] - dateOffsetTopBase[i]) * itemHeight,
       }));
     }
@@ -504,8 +513,8 @@
     const self = this;
     return function() {
       const nodeTop = util.getTopPos(node);
-      const topBorder = util.getTopPos(document.querySelector('#data-chose-top-border'));
-      const bottomBorder = util.getTopPos(document.querySelector('#data-chose-bottom-border'));
+      const topBorder = util.getTopPos(document.querySelector('#date-container' + self.classSuffix).querySelector('.data-chose-top-border'));
+      const bottomBorder = util.getTopPos(document.querySelector('#date-container' + self.classSuffix).querySelector('.data-chose-bottom-border'));
       if (topBorder <= nodeTop && nodeTop <= bottomBorder) {
         node.classList.add('choseEle');
       } else {
