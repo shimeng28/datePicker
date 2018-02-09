@@ -288,7 +288,7 @@
     return this;
   };
   fn.renderDateWrap = function() {
-    let datePicker = '<div class="date-mask-wrap" id="date-mask' + this.classSuffix + '"></div><div id="date-container'+ this.classSuffix +'" class="date-container-wrap">';
+    let datePicker = '<div id="date-container'+ this.classSuffix +'" class="date-container-wrap">';
 
     let titleBar = '<div id="date-title-bar' + this.classSuffix + '" class="date-title-bar-wrap">'
                    + '<div class="data-cancel">取消</div>'
@@ -325,7 +325,7 @@
 
     content += ('<div class="data-chose-top-border"></div><div class="data-chose-bottom-border"></div><div class="date-cell date-year-cell">年</div><div class="date-cell date-month-cell">月</div><div class="date-cell date-day-cell">日</div>' +year + month + day + '</div>');
 
-    datePicker += (titleBar + content + '</div>');
+    datePicker += (titleBar + content + '</div><div class="date-mask-wrap" id="date-mask' + this.classSuffix + '"></div>');
     const domFragment = document.createElement('div');
     domFragment.innerHTML = datePicker;
     const container = document.querySelector(this.opt.container)
@@ -391,7 +391,7 @@
   fn.hide = function(e) {
     const ele = document.querySelector('#date-container' + this.classSuffix);
     const mask = document.querySelector('#date-mask' + this.classSuffix);
-    mask.style.zIndex = 1;
+    mask.style.zIndex = -1;
     ele.style.zIndex = -1;
   };
   fn.initScroll = function() {
@@ -543,8 +543,8 @@
     if (scroller.lastChoseEle) {
       scroller.lastChoseEle.classList.remove('choseEle')
     }
-
     const curr = currDateList[type] - dateOffsetTopBase[type];
+    console.log('length', curr*stepLen);
     scroller.scrollTo(0, curr * stepLen);
      // 元素list最上面有三个占位置的元素
     const choseElePos = curr + 3;
