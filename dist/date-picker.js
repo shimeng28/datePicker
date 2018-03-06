@@ -57,7 +57,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     },
     defaultConfig: function defaultConfig() {
       var date = new Date();
-      date = new Date([date.getFullYear(), date.getMonth() + 1, date.getDate()]);
+      date = new Date([date.getFullYear(), date.getMonth() + 1, date.getDate()].join('/'));
       return {
         currDate: date,
         minDate: date,
@@ -254,15 +254,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     // 如果没有自定义最大日期
     if (!this.opt.maxDate) {
-      this.opt.maxDate = new Date([currDate.getFullYear() + 100, 12, 31]);
+      this.opt.maxDate = new Date([currDate.getFullYear() + 100, 12, 31].join('/'));
     }
     var maxDate = this.opt.maxDate;
     this.minDateList = [minDate.getFullYear(), minDate.getMonth() + 1, minDate.getDate()];
     this.currDateList = [currDate.getFullYear(), currDate.getMonth() + 1, currDate.getDate()];
     this.maxDateList = [maxDate.getFullYear(), maxDate.getMonth() + 1, maxDate.getDate()];
-    this.opt.minDate = new Date(this.minDateList);
-    this.opt.currDate = new Date(this.currDateList);
-    this.opt.maxDate = new Date(this.maxDateList);
+    this.opt.minDate = new Date(this.minDateList.join('/'));
+    this.opt.currDate = new Date(this.currDateList.join('/'));
+    this.opt.maxDate = new Date(this.maxDateList.join('/'));
 
     this.dateOffsetTopBase = [minDate.getFullYear(), 1, 1];
 
@@ -357,12 +357,31 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var mask = document.querySelector('#date-mask' + this.classSuffix);
     ele.style.zIndex = 9999;
     mask.style.zIndex = 9998;
+    var tpl = '<div class="date-picker-mask" style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; z-index: 100; background-color: rgba(0, 0, 0, .3)"></div>';
+    var $tpl = document.querySelector('.date-picker-mask');
+    if ($tpl) {
+      $tpl.style.display = 'block';
+    } else {
+      var eleDiv = document.createElement('div');
+      eleDiv.innerHTML = tpl;
+      document.body.appendChild(eleDiv);
+    }
+
+    // 禁止外部页面的滚动
+    document.body.style.overflow = 'hidden';
   };
   fn.hide = function (e) {
     var ele = document.querySelector('#date-container' + this.classSuffix);
     var mask = document.querySelector('#date-mask' + this.classSuffix);
     mask.style.zIndex = -1;
     ele.style.zIndex = -1;
+    var $tpl = document.querySelector('.date-picker-mask');
+    if ($tpl) {
+      $tpl.style.display = 'none';
+    }
+
+    // 恢复外部页面的滚动
+    document.body.style.overflow = '';
   };
   fn.initScroll = function () {
     var currDateList = this.currDateList,
@@ -405,9 +424,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     this.minDateList = [minDate.getFullYear(), minDate.getMonth() + 1, minDate.getDate()];
     this.currDateList = [currDate.getFullYear(), currDate.getMonth() + 1, currDate.getDate()];
     this.maxDateList = [maxDate.getFullYear(), maxDate.getMonth() + 1, maxDate.getDate()];
-    this.opt.minDate = new Date(this.minDateList);
-    this.opt.currDate = new Date(this.currDateList);
-    this.opt.maxDate = new Date(this.maxDateList);
+    this.opt.minDate = new Date(this.minDateList.join('/'));
+    this.opt.currDate = new Date(this.currDateList.join('/'));
+    this.opt.maxDate = new Date(this.maxDateList.join('/'));
 
     this.dateOffsetTopBase = [minDate.getFullYear(), 1, 1];
 
@@ -453,21 +472,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }
 
       currDateList[index] = data;
-      currDate = new Date(currDateList);
+      currDate = new Date(currDateList.join('/'));
 
       // 30天的月份
       var maxThirtyDays = currDateList;
       if ([1, 3, 5, 7, 8, 10, 12].indexOf(currDateList[1]) === -1) {
         maxThirtyDays = [currDateList[0], currDateList[1], 30];
       }
-      if (currDate.getTime() > new Date(maxThirtyDays)) {
+      if (currDate.getTime() > new Date(maxThirtyDays.join('/'))) {
         // 月份为30天的超过日期 直接修改天数
         currDateList = maxThirtyDays;
         choseScroller = scrollerList[2];
         type = 2;
       }
 
-      currDate = new Date(currDateList);
+      currDate = new Date(currDateList.join('/'));
 
       // 闰年
       var maxLeaf = currDateList;
@@ -476,7 +495,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       } else if (currDateList[1] === 2) {
         maxLeaf = [currDateList[0], 2, 28];
       }
-      if (currDate.getTime() > new Date(maxLeaf).getTime()) {
+      if (currDate.getTime() > new Date(maxLeaf.join('/')).getTime()) {
         // 月份为2月的超过日期 直接修改天数
         currDateList[2] = maxLeaf[2];
         choseScroller = scrollerList[2];
@@ -485,7 +504,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
       // 日期超过限制
       for (var i = 0; i < 3; i++) {
-        currDate = new Date(currDateList);
+        currDate = new Date(currDateList.join('/'));
         if (currDate.getTime() < minDate.getTime()) {
           currDateList[i] = minDateList[i];
         } else if (currDate.getTime() > maxDate.getTime()) {
@@ -543,7 +562,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     if (!(currDateList[1] % 2)) {
       maxThirtyDays = [currDateList[0], currDateList[1], 30];
     }
-    if (currDate.getTime() > new Date(maxThirtyDays)) {
+    if (currDate.getTime() > new Date(maxThirtyDays.join('/'))) {
       currDateList[2] = maxThirtyDays[2];
     }
   };
