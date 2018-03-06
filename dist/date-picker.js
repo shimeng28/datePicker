@@ -333,7 +333,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var target = ev.target || ev.srcElement;
         switch (target) {
           case okBtn:
-            self.opt.onConfirm(self.currDateList.join('-'));
+            self.opt.onConfirm(self.currDateList.join('/'));
             self.hide();
             break;
           case cancelBtn:
