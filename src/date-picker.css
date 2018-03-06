@@ -46,15 +46,18 @@
   overflow: hidden;
   position: relative;
 }
-.date-content-wrap .date-year, .date-content-wrap .date-month, .date-content-wrap .date-day {
+.date-content-wrap .date-year,
+.date-content-wrap .date-month,
+.date-content-wrap .date-day {
   vertical-align: top;
   display: inline-block;
   width: 33%;
   height: 3.6rem;
   min-width: 1.5rem;
-  padding: 0 0 0 1rem;
+  padding: 0 0 0 11%;
 }
-.date-content-wrap .date-cell, .date-content-wrap .date-cell, .date-content-wrap  .date-cell {
+
+.date-content-wrap .date-cell {
   font-size: 0.32rem;
   position: absolute;
   top: 1.68rem;
