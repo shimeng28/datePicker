@@ -1,98 +1,95 @@
-html {
-	font-size: 50px;
-}
 .date-container-wrap, .date-container-wrap div {
-	box-sizing: border-box;
-	font-family: PingFangSC-Regular;
+  box-sizing: border-box;
+  font-family: PingFangSC-Regular;
 }
 .date-container-wrap, .date-mask-wrap {
-	font-size: 0.35rem;
-	background: rgba(255, 255, 255, 0.8);
-	position: fixed;
-	left: 0;
-	bottom: 0;
-	width: 100%;
-	color: #26282E;
-	z-index: 9999;
+  font-size: 0.35rem;
+  background: rgba(255, 255, 255, 0.8);
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: #26282E;
+  z-index: 9999;
 }
 .date-mask-wrap {
-	background: rgba(255, 255, 255, 1);
-	height: 4.4rem;
-	z-index: 9998;
+  background: rgba(255, 255, 255, 1);
+  height: 4.4rem;
+  z-index: 9998;
 }
 .date-container-wrap .date-title-bar-wrap {
-	width: 100%;
-	text-align: center;
-	background:  #F2F2F2;;
-	padding-left: 0.3rem;
-	padding-right: 0.3rem;
+  width: 100%;
+  text-align: center;
+  background:  #F2F2F2;;
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
 }
 .date-title-bar-wrap div {
-	font-size: 0.30rem;
-	display: inline-block;
-	height: 0.8rem;
-	line-height: 0.8rem;
+  font-size: 0.30rem;
+  display: inline-block;
+  height: 0.8rem;
+  line-height: 0.8rem;
 }
 
 .date-title-bar-wrap .data-cancel, .date-title-bar-wrap .data-ok {
-	color: #EF4238;
-	float: left;
+  color: #EF4238;
+  float: left;
 }
 .date-title-bar-wrap .data-ok {
-	float: right;
+  float: right;
 }
 .date-container-wrap .date-content-wrap {
-	font-size: 0.4rem;
-	width: 100%;
-	height: 3.6rem;
-	background: #fff;
-	overflow: hidden;
-	position: relative;
+  font-size: 0.4rem;
+  width: 100%;
+  height: 3.6rem;
+  background: #fff;
+  overflow: hidden;
+  position: relative;
 }
 .date-content-wrap .date-year, .date-content-wrap .date-month, .date-content-wrap .date-day {
-	vertical-align: top;
-	display: inline-block;
-	width: 33%;
-	height: 3.6rem;
-	min-width: 1.5rem;
-	padding: 0 0 0 1rem;
+  vertical-align: top;
+  display: inline-block;
+  width: 33%;
+  height: 3.6rem;
+  min-width: 1.5rem;
+  padding: 0 0 0 1rem;
 }
 .date-content-wrap .date-cell, .date-content-wrap .date-cell, .date-content-wrap  .date-cell {
-	font-size: 0.32rem;
-	position: absolute;
-	top: 1.68rem;
-	height: 0.56rem;
-	line-height: 0.56rem;
+  font-size: 0.32rem;
+  position: absolute;
+  top: 1.68rem;
+  height: 0.56rem;
+  line-height: 0.56rem;
 }
 .date-content-wrap .date-cell.date-year-cell{
-	left: 2.1rem;
+  left: 2.1rem;
 }
 .date-content-wrap .date-cell.date-month-cell {
-  left: 4.0rem;
+  left: 55%;
 }
 .date-content-wrap  .date-cell.date-day-cell {
-	right: 0.4rem;
+  right: 7%;
 }
 .date-content-wrap .date-year > div > div, .date-content-wrap .date-month > div > div, .date-content-wrap .date-day > div > div {
-	font-size: 0.32rem;
-	color: #ccc;
-	width: 1rem;
-	height: 0.56rem;
-	line-height: 0.56rem;
+  font-size: 0.32rem;
+  color: #ccc;
+  width: 1rem;
+  height: 0.56rem;
+  line-height: 0.56rem;
 }
 .date-content-wrap .date-year > div > div.choseEle, .date-content-wrap .date-month > div > div.choseEle, .date-content-wrap .date-day > div > div.choseEle {
-	color: #000;
-	opacity: 1;
+  color: #000;
+  opacity: 1;
 }
 .date-content-wrap .data-chose-top-border, .date-content-wrap .data-chose-bottom-border {
-		width: 10000rem;
-		position: absolute;
-		left: -100rem;
-		border-top: 1px solid #e7e7e7;
+    width: 10000rem;
+    position: absolute;
+    left: -100rem;
+    border-top: 1px solid #e7e7e7;
 }
 .date-content-wrap .data-chose-top-border {
-	top: 1.68rem;
+  top: 1.68rem;
 }
 .date-content-wrap .data-chose-bottom-border {
-	top: 2.2rem;
+  top: 2.2rem;
 }
