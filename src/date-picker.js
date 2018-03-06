@@ -363,7 +363,7 @@
         let target = ev.target || ev.srcElement;
         switch(target) {
           case okBtn:
-            self.opt.onConfirm(self.currDateList.join('-'));
+            self.opt.onConfirm(self.currDateList.join('/'));
             self.hide();
           break;
           case cancelBtn:
@@ -563,7 +563,6 @@
       scroller.lastChoseEle.classList.remove('choseEle')
     }
     const curr = currDateList[type] - dateOffsetTopBase[type];
-    console.log('length', curr*stepLen);
     scroller.scrollTo(0, curr * stepLen);
      // 元素list最上面有三个占位置的元素
     const choseElePos = curr + 3;

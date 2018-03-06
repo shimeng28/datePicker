@@ -549,7 +549,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       scroller.lastChoseEle.classList.remove('choseEle');
     }
     var curr = currDateList[type] - dateOffsetTopBase[type];
-    console.log('length', curr * stepLen);
     scroller.scrollTo(0, curr * stepLen);
     // 元素list最上面有三个占位置的元素
     var choseElePos = curr + 3;
