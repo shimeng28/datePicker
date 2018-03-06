@@ -62,13 +62,13 @@
   line-height: 0.56rem;
 }
 .date-content-wrap .date-cell.date-year-cell{
-  left: 2.1rem;
+  left: 26%;
 }
 .date-content-wrap .date-cell.date-month-cell {
-  left: 55%;
+  left: 54%;
 }
 .date-content-wrap  .date-cell.date-day-cell {
-  right: 7%;
+  right: 9%;
 }
 .date-content-wrap .date-year > div > div, .date-content-wrap .date-month > div > div, .date-content-wrap .date-day > div > div {
   font-size: 0.32rem;
