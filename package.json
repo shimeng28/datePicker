@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src -d dist",
-    "start": "browser-sync start --server --files '**.css, *.html, src/*.js'",
-    "gulp": "gulp"
+    "start": "gulp"
   },
   "repository": {
     "type": "git",
@@ -25,11 +24,13 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "browser-sync": "^2.23.6",
+    "eruda": "^1.4.3",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.1",
     "gulp-sourcemaps": "^2.6.4"

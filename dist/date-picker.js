@@ -91,7 +91,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       defaultPlace: 0,
       callback: function callback() {}
     };
-    this.options = Object.assign(this.options, params);
+    this.options = _extends(this.options, params);
 
     this.startPageY = 0;
     this.startTime = 0;
@@ -243,7 +243,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
    */
   function DatePicker(options) {
     var defaultOpt = util.defaultConfig();
-    this.opt = Object.assign({}, defaultOpt, options);
+    this.opt = _extends({}, defaultOpt, options);
 
     var currDate = this.opt.currDate;
     var minDate = this.opt.minDate;
@@ -287,7 +287,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     return this;
   };
   fn.renderDateWrap = function () {
-    var datePicker = '<div class="date-mask-wrap" id="date-mask' + this.classSuffix + '"></div><div id="date-container' + this.classSuffix + '" class="date-container-wrap">';
+    var datePicker = '<div id="date-container' + this.classSuffix + '" class="date-container-wrap">';
 
     var titleBar = '<div id="date-title-bar' + this.classSuffix + '" class="date-title-bar-wrap">' + '<div class="data-cancel">取消</div>' + '<div>' + this.opt.title + '</div>' + '<div class="data-ok">确定</div>' + '</div>';
 
@@ -300,7 +300,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     content += '<div class="data-chose-top-border"></div><div class="data-chose-bottom-border"></div><div class="date-cell date-year-cell">年</div><div class="date-cell date-month-cell">月</div><div class="date-cell date-day-cell">日</div>' + year + month + day + '</div>';
 
-    datePicker += titleBar + content + '</div>';
+    datePicker += titleBar + content + '</div><div class="date-mask-wrap" id="date-mask' + this.classSuffix + '"></div>';
     var domFragment = document.createElement('div');
     domFragment.innerHTML = datePicker;
     var container = document.querySelector(this.opt.container);
@@ -361,7 +361,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   fn.hide = function (e) {
     var ele = document.querySelector('#date-container' + this.classSuffix);
     var mask = document.querySelector('#date-mask' + this.classSuffix);
-    mask.style.zIndex = 1;
+    mask.style.zIndex = -1;
     ele.style.zIndex = -1;
   };
   fn.initScroll = function () {
@@ -385,7 +385,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
    * @param {object} params 可以包括minDate, maxDate, currDate
    */
   fn.setDateLimit = function (params) {
-    this.opt = Object.assign(_extends({}, this.opt, params));
+    this.opt = _extends(_extends({}, this.opt, params));
 
     var _opt = this.opt,
         minDate = _opt.minDate,
@@ -529,8 +529,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     if (scroller.lastChoseEle) {
       scroller.lastChoseEle.classList.remove('choseEle');
     }
-
     var curr = currDateList[type] - dateOffsetTopBase[type];
+    console.log('length', curr * stepLen);
     scroller.scrollTo(0, curr * stepLen);
     // 元素list最上面有三个占位置的元素
     var choseElePos = curr + 3;

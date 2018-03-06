@@ -22,7 +22,6 @@ gulp.task('serve', ['babel'], () => {
 			baseDir: './'
 		}
 	});
-	gulp.watch('src/*.css').on('change', browserSync.reload);
 	gulp.watch('*.html').on('change', browserSync.reload);
 	gulp.watch('src/*.js', ['js-watch']);
 });
