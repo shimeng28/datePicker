@@ -53,7 +53,7 @@
     },
     defaultConfig: function() {
       let date = new Date();
-      date = new Date([date.getFullYear(), date.getMonth() + 1, date.getDate()]);
+      date = new Date([date.getFullYear(), date.getMonth() + 1, date.getDate()].join('/'));
       return {
         currDate: date,
         minDate: date,
@@ -255,15 +255,15 @@
 
     // 如果没有自定义最大日期
     if (!this.opt.maxDate) {
-      this.opt.maxDate = new Date([currDate.getFullYear() + 100, 12, 31]);
+      this.opt.maxDate = new Date([currDate.getFullYear() + 100, 12, 31].join('/'));
     }
     const maxDate = this.opt.maxDate;
     this.minDateList = [minDate.getFullYear(), minDate.getMonth() + 1, minDate.getDate()];
     this.currDateList = [currDate.getFullYear(), currDate.getMonth() + 1, currDate.getDate()];
     this.maxDateList = [maxDate.getFullYear(), maxDate.getMonth() + 1, maxDate.getDate()];
-    this.opt.minDate = new Date(this.minDateList);
-    this.opt.currDate = new Date(this.currDateList);
-    this.opt.maxDate = new Date(this.maxDateList);
+    this.opt.minDate = new Date(this.minDateList.join('/'));
+    this.opt.currDate = new Date(this.currDateList.join('/'));
+    this.opt.maxDate = new Date(this.maxDateList.join('/'));
 
     this.dateOffsetTopBase = [minDate.getFullYear(), 1, 1];
 
@@ -431,9 +431,9 @@
     this.minDateList = [minDate.getFullYear(), minDate.getMonth() + 1, minDate.getDate()];
     this.currDateList = [currDate.getFullYear(), currDate.getMonth() + 1, currDate.getDate()];
     this.maxDateList = [maxDate.getFullYear(), maxDate.getMonth() + 1, maxDate.getDate()];
-    this.opt.minDate = new Date(this.minDateList);
-    this.opt.currDate = new Date(this.currDateList);
-    this.opt.maxDate = new Date(this.maxDateList);
+    this.opt.minDate = new Date(this.minDateList.join('/'));
+    this.opt.currDate = new Date(this.currDateList.join('/'));
+    this.opt.maxDate = new Date(this.maxDateList.join('/'));
 
     this.dateOffsetTopBase = [minDate.getFullYear(), 1, 1];
 
@@ -467,21 +467,21 @@
       }
 
       currDateList[index] = data;
-      currDate = new Date(currDateList);
+      currDate = new Date(currDateList.join('/'));
 
       // 30天的月份
       let maxThirtyDays = currDateList;
       if (([1,3,5,7,8,10,12]).indexOf(currDateList[1]) === -1) {
         maxThirtyDays = [currDateList[0], currDateList[1], 30];
       }
-      if (currDate.getTime() > new Date(maxThirtyDays)) {
+      if (currDate.getTime() > new Date(maxThirtyDays.join('/'))) {
         // 月份为30天的超过日期 直接修改天数
         currDateList = maxThirtyDays;
         choseScroller = scrollerList[2];
         type = 2;
       }
 
-      currDate = new Date(currDateList);
+      currDate = new Date(currDateList.join('/'));
 
 
       // 闰年
@@ -491,7 +491,7 @@
       } else if (currDateList[1] === 2) {
         maxLeaf = [currDateList[0], 2, 28];
       }
-      if (currDate.getTime() > new Date(maxLeaf).getTime()) {
+      if (currDate.getTime() > new Date(maxLeaf.join('/')).getTime()) {
         // 月份为2月的超过日期 直接修改天数
         currDateList[2] = maxLeaf[2];
         choseScroller = scrollerList[2];
@@ -500,7 +500,7 @@
 
       // 日期超过限制
       for (let i = 0; i < 3; i++) {
-        currDate = new Date(currDateList);
+        currDate = new Date(currDateList.join('/'));
         if (currDate.getTime() < minDate.getTime()) {
           currDateList[i] = minDateList[i];
         } else if (currDate.getTime() > maxDate.getTime()) {
@@ -557,7 +557,7 @@
     if (!(currDateList[1] % 2)) {
       maxThirtyDays = [currDateList[0], currDateList[1], 30];
     }
-    if (currDate.getTime() > new Date(maxThirtyDays)) {
+    if (currDate.getTime() > new Date(maxThirtyDays.join('/'))) {
       currDateList[2] = maxThirtyDays[2];
     }
   };
