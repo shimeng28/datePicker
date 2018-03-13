@@ -333,7 +333,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var target = ev.target || ev.srcElement;
         switch (target) {
           case okBtn:
-            self.opt.onConfirm(self.currDateList.join('-'));
+            self.opt.onConfirm(self.currDateList.join('/'));
             self.hide();
             break;
           case cancelBtn:
@@ -357,12 +357,31 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var mask = document.querySelector('#date-mask' + this.classSuffix);
     ele.style.zIndex = 9999;
     mask.style.zIndex = 9998;
+    var tpl = '<div class="date-picker-mask" style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; z-index: 100; background-color: rgba(0, 0, 0, .3)"></div>';
+    var $tpl = document.querySelector('.date-picker-mask');
+    if ($tpl) {
+      $tpl.style.display = 'block';
+    } else {
+      var eleDiv = document.createElement('div');
+      eleDiv.innerHTML = tpl;
+      document.body.appendChild(eleDiv);
+    }
+
+    // 禁止外部页面的滚动
+    document.body.style.overflow = 'hidden';
   };
   fn.hide = function (e) {
     var ele = document.querySelector('#date-container' + this.classSuffix);
     var mask = document.querySelector('#date-mask' + this.classSuffix);
     mask.style.zIndex = -1;
     ele.style.zIndex = -1;
+    var $tpl = document.querySelector('.date-picker-mask');
+    if ($tpl) {
+      $tpl.style.display = 'none';
+    }
+
+    // 恢复外部页面的滚动
+    document.body.style.overflow = '';
   };
   fn.initScroll = function () {
     var currDateList = this.currDateList,
@@ -530,7 +549,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       scroller.lastChoseEle.classList.remove('choseEle');
     }
     var curr = currDateList[type] - dateOffsetTopBase[type];
-    console.log('length', curr * stepLen);
     scroller.scrollTo(0, curr * stepLen);
     // 元素list最上面有三个占位置的元素
     var choseElePos = curr + 3;
